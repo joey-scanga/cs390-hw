@@ -1,0 +1,148 @@
+BNF grammar
+===========
+
+< program >     ::= < var-declist > < fun-declist > < block >
+                    | < fun-declist > < block > 
+                    | < block >
+
+< fun-declist > ::= < fun > 
+                    | < fun-declist > < fun >
+
+< fun >         ::= < fun-type > < id > LPAREN < param-list > RPAREN < block >
+                    | < fun-type > < id > LPAREN RPAREN < block >
+
+< fun-type >    ::= PROC
+                    | < type >
+
+< param-list >  ::= < param-decl >
+                    | < param-decl > COMMA < param-list >
+
+< param-decl >  ::= < type > < id > 
+                    | < type > "[]" < id >
+
+< block >       ::= BEGIN < var-declist > < stmnt-list > END
+                    | BEGIN < stmnt-list > END
+
+< var-declist > ::= < var-decl >
+                    | < var-decl > < var-declist >
+
+< var-decl >    ::= < type > < id >
+                    | < type > < id > LBRACK < bounds > RBRACK
+
+< bounds >     ::=  < integer >
+                    | < bounds > COMMA < integer >
+
+< type >        ::= NUMTYPE
+                    | CHARTYPE
+
+< stmnt-list >  ::= < stmnt > <stmnt-list'>
+
+< stmnt-list' > ::= ""
+                    | <stmnt> <stmnt-list'>
+
+< stmnt >       ::= < assign > 
+                    | < swap >
+                    | < branch > 
+                    | < loop > 
+                    | < expr >
+                    | < print >
+                    | < read >
+
+< assign >      ::= < ref > ASSIGN < expr >
+
+< swap >        ::= < ref > SWAP < ref >
+
+< branch >      ::= IF < condition > < block > <branch'>
+
+< branch' >     ::= ""
+                    | ELSE <block>
+
+< loop >        ::= WHILE < condition > < block >
+
+< condition >   ::= < expr > <condition'>
+
+< condition' >  ::= EQ <expr>
+                    | NOEQ <expr>
+                    | LT <expr>
+                    | LTE <expr>
+                    | GT <expr>
+                    | GTE <expr>
+
+< expr >        ::= < term >
+                    | < expr > PLUS < term >
+                    | < expr > MINUS < term >
+
+< expr' >       ::= PLUS <term> <expr'>
+                    | MINUS <term> <expr'>
+                    | ""
+
+< term >        ::= < factor >
+                    | < term > TIMES < factor >
+                    | < term > DIV < factor >
+
+< term' >       ::= TIMES <factor> <term'>
+                    | DIV <factor> <term'>
+                    | ""
+
+< factor >      ::= < exponent > < factor' >
+
+< factor' >     ::= EXP <exponent> <factor'>
+                    | ""
+
+< exponent >    ::= LPAREN < expr > RPAREN
+                    | < ref >
+                    | < literal >
+                    | < call >
+
+< print >       ::= print < arg-list >
+
+< arg-list >    ::= < expr >
+                    | < expr > comma < arg-list >
+
+< read >        ::= read < ref-list >
+
+< ref-list >    ::= < ref >
+                    | < ref > COMMA < ref-list >
+
+< ref >         ::= < id >
+                    | < id > LBRACK < arg-list > RBRACK
+
+< literal >     ::= < integer >
+                    | < float >
+                    | < char-lit >
+                    | < string >
+
+< call >        ::= < id > LPAREN < arg-list > RPAREN
+                    | < id > LPAREN RPAREN
+
+< integer >     ::= < digit >
+                    | < integer > < digit >
+
+< float >       ::= < integer > "." < integer >
+
+< char-lit>     ::= "'" < character > "'"
+
+< string >      ::= "\"" < characters > "\""
+
+< characters>   ::= < character >
+                    | < characters > < character >
+
+< id >          ::= < letter >
+                    | "_"
+                    | < id > < digit >
+                    | < id > < letter >
+
+
+
+informally stated (not in bnf)
+==============================
+< digit > any digit 0-9
+< character > any character, with normal escapes \n, \t, \', \"
+< letter> any upper or lower case letter
+
+comments begin with "#" and extend to the end of a line
+
+
+tokens
+======
+pROC := "PROC"
