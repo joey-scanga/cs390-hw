@@ -1,12 +1,11 @@
 BNF grammar
 ===========
 
+###########################
 < program >     ::= < var-declist > < fun-declist > < block >
                     | < fun-declist > < block > 
                     | < block >
 
-
-###################
 < fun-declist > ::= < fun > <fun-declist'>
                     
 < fun-declist' >::= < fun > <fun-declist'>
@@ -49,22 +48,24 @@ BNF grammar
 
 < bounds'>     ::=  COMMA <integer> <bounds'>
                     | ""
-############################
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 < stmnt-list >  ::= < stmnt > <stmnt-list'>
 
 < stmnt-list' > ::= ""
                     | <stmnt> <stmnt-list'>
 
-< stmnt >       ::= < assign > 
-                    | < swap >
-                    | < branch > 
+##########################################
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+< stmnt >       ::= < assign > #
+                    | < swap >#
+                    | < branch > #
                     | < loop > 
                     | < expr >
                     | < print >
                     | < read >
 
+###########################################
 < assign >      ::= < ref > ASSIGN < expr >
 
 < swap >        ::= < ref > SWAP < ref >
@@ -73,6 +74,7 @@ BNF grammar
 
 < branch' >     ::= ""
                     | ELSE <block>
+
 
 < loop >        ::= WHILE < condition > < block >
 
@@ -109,20 +111,27 @@ BNF grammar
 < exponent >    ::= LPAREN < expr > RPAREN
                     | < ref >
                     | < literal >
-                    | < call >
+                    | < call >!!!!!
 
-< print >       ::= print < arg-list >
+< print >       ::= PRINT < arg-list >
 
-< arg-list >    ::= < expr >
-                    | < expr > COMMA < arg-list >
+##########################################
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+< arg-list >    ::= < expr > < arg-list' >
+
+< arg-list' >   ::= ""
+                    | COMMA <expr> <arg-list'>
 
 < read >        ::= read < ref-list >
 
 < ref-list >    ::= < ref >
                     | < ref > COMMA < ref-list >
 
-< ref >         ::= VARIABLE
-                    | VARIABLE LBRACK < arg-list > RBRACK
+< ref >         ::= VARIABLE <ref'>
+
+< ref' >        ::= ""
+                    | LBRACK < arg-list> RBRACK
 
 < literal >     ::= < integer >
                     | < float >

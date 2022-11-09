@@ -115,7 +115,6 @@ class Lexer:
       ('-', Token.MINUS),
       ('/', Token.DIV),
       ("=", Token.EQ),
-      ("~=", Token.NOEQ),
     ]
     for tok in t:
       if self.__cur_char == tok[0]:
@@ -134,7 +133,8 @@ class Lexer:
       (">", Token.GT),
       (">=", Token.GTE),
       ("*", Token.TIMES),
-      ("**", Token.EXP),
+      ("**", Token.EXP)
+      
     ]
 
     cur_lex = ""
@@ -281,6 +281,7 @@ class Lexer:
       ("WHILE", Token.WHILE),
       ("PRINT", Token.PRINT),
       ("READ", Token.READ),
+      ("~=", Token.NOEQ)
     ]
 
     # ^^^^^ Modify only the keyword list to use this function ^^^^^^^
