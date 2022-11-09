@@ -9,6 +9,7 @@ To write a parser:
     3.) Add data structures to build the parse tree.
 """
 import sys
+
 from lexer import Token, Lexer
 
 
@@ -51,6 +52,25 @@ class Parser:
       f"Parser error at line {ct.line}, column {ct.col}.\nReceived token {ct.token.name} expected {t.name}"
     )
     sys.exit(-1)
+
+  '''
+  I added this function to make sure that there is no unexpected EOF before
+  the program has an END token.
+  '''
+
+  def __must_not_be(self, t):
+    if self.__has(t):
+      ct = self.__lexer.get_tok()
+      print(
+        f"Parser error at line {ct.line}, column {ct.col}.\nForbidden token {ct.token.name}"
+      )
+      sys.exit(-1)
+
+    # print an error
+
+  def __print_current_token(self):
+    ct = self.__lexer.get_tok()
+    print(f"{ct}")
 
   def parse(self):
     """
@@ -101,14 +121,36 @@ class Parser:
 
   def __program(self):
     self.__next()
+    while not self.__has(Token.BEGIN):
+      if self.__has(Token.PROC):
+        self.__next()
+        self.__fun()
+        self.__next()
+      elif self.__has(Token.NUMTYPE):
+        self.__next()
+        self.__fun_or_decl()
+        self.__next()
+      else:
+        self.__must_be(Token.CHARTYPE)
+        self.__next()
+        self.__fun_or_decl()
+        self.__next()
 
-    while not self.__has(Token.EOF):
+    self.__block()
+
+  def __block(self):
+    self.__must_be(Token.BEGIN)
+    self.__next()
+    while not self.__has(Token.END):
       self.__statement()
 
   def __statement(self):
     if self.__has(Token.VARIABLE):
       self.__next()
       self.__ao_expression()
+    elif self.__has(Token.BEGIN):
+      self.__next()
+      self.__block()
     elif self.__has(Token.NUMTYPE) or self.__has(Token.CHARTYPE):
       self.__next()
       self.__fun_or_decl()
@@ -181,6 +223,7 @@ class Parser:
     else:
       self.__must_be(Token.RPAREN)
       self.__next()
+      self.__block()
 
   def __ao_expression(self):
     if self.__has(Token.EQUAL):

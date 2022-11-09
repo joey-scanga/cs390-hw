@@ -5,6 +5,8 @@ BNF grammar
                     | < fun-declist > < block > 
                     | < block >
 
+
+###################
 < fun-declist > ::= < fun > <fun-declist'>
                     
 < fun-declist' >::= < fun > <fun-declist'>
@@ -28,8 +30,7 @@ BNF grammar
 < param-decl' > ::= VARIABLE 
                     | LBRACK RBRACK <id>
 
-< block >       ::= BEGIN < var-declist > < stmnt-list > END
-                    | BEGIN < stmnt-list > END
+< block >       ::= BEGIN <block'>
 
 < block' >      ::= <var-declist> <stmnt-list> END
                     | <stmnt-list> END
@@ -48,6 +49,8 @@ BNF grammar
 
 < bounds'>     ::=  COMMA <integer> <bounds'>
                     | ""
+############################
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 < stmnt-list >  ::= < stmnt > <stmnt-list'>
 
@@ -111,7 +114,7 @@ BNF grammar
 < print >       ::= print < arg-list >
 
 < arg-list >    ::= < expr >
-                    | < expr > comma < arg-list >
+                    | < expr > COMMA < arg-list >
 
 < read >        ::= read < ref-list >
 
@@ -126,8 +129,10 @@ BNF grammar
                     | < char-lit >
                     | < string >
 
-< call >        ::= VARIABLE LPAREN < arg-list > RPAREN
-                    | VARIABLE LPAREN RPAREN
+< call >        ::= VARIABLE LPAREN < call' >
+
+< call' >       ::= < arg-list > RPAREN
+                    | RPAREN
 
 < integer >     ::= < digit >
                     | < integer > < digit >
