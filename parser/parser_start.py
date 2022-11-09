@@ -136,18 +136,8 @@ class Parser:
         self.__fun_or_decl()
         self.__next()
 
-    self.__global_block()
+    self.__block()
 
-  '''
-  TODO:
-  Implement a stack that stores each scope, so there's no need to hardcode different block levels.
-  '''
-  def __global_block(self):
-    self.__must_be(Token.BEGIN)
-    self.__next()
-    while not self.__has(Token.END):
-      self.__statement()
-      
   def __block(self):
     self.__must_be(Token.BEGIN)
     self.__next()
