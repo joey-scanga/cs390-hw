@@ -5,35 +5,49 @@ BNF grammar
                     | < fun-declist > < block > 
                     | < block >
 
-< fun-declist > ::= < fun > 
-                    | < fun-declist > < fun >
+< fun-declist > ::= < fun > <fun-declist'>
+                    
+< fun-declist' >::= < fun > <fun-declist'>
+                    | ""
 
-< fun >         ::= < fun-type > < id > LPAREN < param-list > RPAREN < block >
-                    | < fun-type > < id > LPAREN RPAREN < block >
+< fun >         ::= < fun-type > VARIABLE LPAREN < fun' >
+              
+< fun' >        ::= < param-list > RPAREN <block>
+                    | RPAREN <block>
 
 < fun-type >    ::= PROC
-                    | < type >
+                    | (NUMTYPE | CHARTYPE)
 
-< param-list >  ::= < param-decl >
-                    | < param-decl > COMMA < param-list >
+< param-list >  ::= < param-decl > <param-list'>
 
-< param-decl >  ::= < type > < id > 
-                    | < type > "[]" < id >
+< param-list' > ::= COMMA <param-decl> <param-list'>
+                    | ""
+
+< param-decl >  ::= (NUMTYPE | CHARTYPE) <param-decl'>
+                    
+< param-decl' > ::= VARIABLE 
+                    | LBRACK RBRACK <id>
 
 < block >       ::= BEGIN < var-declist > < stmnt-list > END
                     | BEGIN < stmnt-list > END
 
-< var-declist > ::= < var-decl >
-                    | < var-decl > < var-declist >
+< block' >      ::= <var-declist> <stmnt-list> END
+                    | <stmnt-list> END
 
-< var-decl >    ::= < type > < id >
-                    | < type > < id > LBRACK < bounds > RBRACK
+< var-declist > ::= < var-decl > < var-declist' >
 
-< bounds >     ::=  < integer >
-                    | < bounds > COMMA < integer >
+< var-declist' >::= < var-decl > < var-declist'>
+                    | ""
 
-< type >        ::= NUMTYPE
-                    | CHARTYPE
+< var-decl >    ::= (NUMTYPE | CHARTYPE) VARIABLE <var-decl'>
+
+< var-decl' >   ::= LBRACK <bounds> RBRACK
+                    | ""
+
+< bounds >     ::=  < integer > <bounds'>
+
+< bounds'>     ::=  COMMA <integer> <bounds'>
+                    | ""
 
 < stmnt-list >  ::= < stmnt > <stmnt-list'>
 
@@ -104,16 +118,16 @@ BNF grammar
 < ref-list >    ::= < ref >
                     | < ref > COMMA < ref-list >
 
-< ref >         ::= < id >
-                    | < id > LBRACK < arg-list > RBRACK
+< ref >         ::= VARIABLE
+                    | VARIABLE LBRACK < arg-list > RBRACK
 
 < literal >     ::= < integer >
                     | < float >
                     | < char-lit >
                     | < string >
 
-< call >        ::= < id > LPAREN < arg-list > RPAREN
-                    | < id > LPAREN RPAREN
+< call >        ::= VARIABLE LPAREN < arg-list > RPAREN
+                    | VARIABLE LPAREN RPAREN
 
 < integer >     ::= < digit >
                     | < integer > < digit >
@@ -126,12 +140,6 @@ BNF grammar
 
 < characters>   ::= < character >
                     | < characters > < character >
-
-< id >          ::= < letter >
-                    | "_"
-                    | < id > < digit >
-                    | < id > < letter >
-
 
 
 informally stated (not in bnf)
