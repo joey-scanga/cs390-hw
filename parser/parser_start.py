@@ -109,6 +109,9 @@ class Parser:
     if self.__has(Token.VARIABLE):
       self.__next()
       self.__ao_expression()
+    elif self.__has(Token.NUMTYPE) or self.__has(Token.CHARTYPE):
+      self.__next()
+      self.__fun_or_decl()
     elif self.__has(Token.PROC):
       self.__next()
       self.__fun()
@@ -128,8 +131,35 @@ class Parser:
       self.__term2()
       self.__expression2()
     else:
-      self.__must_be(Token.INPUT)
-      self.__input()
+      self.__must_be(Token.READ)
+      self.__read()
+
+  def __fun_or_decl(self):
+    self.__must_be(Token.VARIABLE)
+    self.__next()
+    if self.__has(Token.LPAREN):
+      self.__next()
+      self.__fun2()
+    elif self.__has(Token.LBRACK):
+      self.__next()
+      self.__bounds()
+
+  def __decl(self):
+    if self.__has(Token.LBRACK):
+      self.__next()
+      self.__bounds()
+    else:
+      self.__next()
+
+  def __bounds(self):
+    self.__must_be(Token.INTLIT)
+    self.__next()
+    if self.__has(Token.COMMA):
+      self.__next()
+      self.__bounds()
+    else:
+      self.__must_be(Token.RBRACK)
+      self.__next()
 
   def __fun(self):
     self.__must_be(Token.VARIABLE)
@@ -211,8 +241,8 @@ class Parser:
     elif self.__must_be(Token.FLOATLIT):
       self.__next()
 
-  def __input(self):
-    self.__must_be(Token.INPUT)
+  def __read(self):
+    self.__must_be(Token.READ)
     self.__next()
     self.__must_be(Token.VARIABLE)
     self.__next()
