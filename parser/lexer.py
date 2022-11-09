@@ -125,17 +125,9 @@ class Lexer:
     return False
 
   def __lex_multi_fixed(self):
-    t = [
-      (":=", Token.ASSIGN),
-      (":=:", Token.SWAP),
-      ("<", Token.LT),
-      ("<=", Token.LTE),
-      (">", Token.GT),
-      (">=", Token.GTE),
-      ("*", Token.TIMES),
-      ("**", Token.EXP)
-      
-    ]
+    t = [(":=", Token.ASSIGN), (":=:", Token.SWAP), ("<", Token.LT),
+         ("<=", Token.LTE), (">", Token.GT), (">=", Token.GTE),
+         ("*", Token.TIMES), ("**", Token.EXP)]
 
     cur_lex = ""
     line = self.__line
@@ -266,23 +258,13 @@ class Lexer:
     else:
       self.__tok = self.__create_tok(Token.INVALID)
 
-    print(cur_lex)
     return True
 
   def __lex_keyword_or_var(self):
-    kw = [
-      ("PROC", Token.PROC),
-      ("BEGIN", Token.BEGIN),
-      ("END", Token.END),
-      ("NUMBER", Token.NUMTYPE),
-      ("CHARLIT", Token.CHARTYPE),
-      ("IF", Token.IF),
-      ("ELSE", Token.ELSE),
-      ("WHILE", Token.WHILE),
-      ("PRINT", Token.PRINT),
-      ("READ", Token.READ),
-      ("~=", Token.NOEQ)
-    ]
+    kw = [("PROC", Token.PROC), ("BEGIN", Token.BEGIN), ("END", Token.END),
+          ("NUMBER", Token.NUMTYPE), ("CHARLIT", Token.CHARTYPE),
+          ("IF", Token.IF), ("ELSE", Token.ELSE), ("WHILE", Token.WHILE),
+          ("PRINT", Token.PRINT), ("READ", Token.READ), ("~=", Token.NOEQ)]
 
     # ^^^^^ Modify only the keyword list to use this function ^^^^^^^
 

@@ -60,10 +60,10 @@ BNF grammar
 < stmnt >       ::= < assign > #
                     | < swap >#
                     | < branch > #
-                    | < loop > 
-                    | < expr >
-                    | < print >
-                    | < read >
+                    | < loop > #
+                    | < expr > #
+                    | < print > #
+                    | < read > #
 
 ###########################################
 < assign >      ::= < ref > ASSIGN < expr >
@@ -115,23 +115,26 @@ BNF grammar
 
 < print >       ::= PRINT < arg-list >
 
-##########################################
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
 < arg-list >    ::= < expr > < arg-list' >
 
 < arg-list' >   ::= ""
                     | COMMA <expr> <arg-list'>
 
-< read >        ::= read < ref-list >
 
-< ref-list >    ::= < ref >
-                    | < ref > COMMA < ref-list >
+< read >        ::= READ < ref-list >
+
+< ref-list >    ::= < ref > < ref-list'>
+
+< ref-list' >   ::= ""
+                    | COMMA <ref> <ref-list'>
 
 < ref >         ::= VARIABLE <ref'>
 
 < ref' >        ::= ""
                     | LBRACK < arg-list> RBRACK
+
 
 < literal >     ::= < integer >
                     | < float >
@@ -142,6 +145,7 @@ BNF grammar
 
 < call' >       ::= < arg-list > RPAREN
                     | RPAREN
+
 
 < integer >     ::= < digit >
                     | < integer > < digit >
@@ -154,6 +158,9 @@ BNF grammar
 
 < characters>   ::= < character >
                     | < characters > < character >
+
+##########################################
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 informally stated (not in bnf)

@@ -9,7 +9,7 @@ To write a parser:
     3.) Add data structures to build the parse tree.
 """
 import sys
-
+import pdb
 from lexer import Token, Lexer
 
 
@@ -165,10 +165,12 @@ class Parser:
     elif self.__has(Token.WHILE):
       self.__next()
       self.__loop()
-
     elif self.__has(Token.PRINT):
       self.__next()
-      self.__print()
+      self.__arg_list()
+    elif self.__has(Token.READ):
+      self.__next()
+      self.__ref_list()
     elif self.__has(Token.LPAREN):
       self.__next()
       self.__expression()
@@ -188,7 +190,7 @@ class Parser:
       self.__must_be(Token.READ)
       self.__read()
 
-  #Decides whether a statement beginning with a variable is an expression, 
+  #Decides whether a statement beginning with a variable is an expression,
   #assignment, or swap
   def __expr_assign_swap(self):
     if self.__has(Token.ASSIGN):
@@ -218,7 +220,6 @@ class Parser:
       self.__must_be(Token.RBRACK)
       self.__next()
 
-  
   def __fun_or_decl(self):
     self.__must_be(Token.VARIABLE)
     self.__next()
@@ -284,7 +285,8 @@ class Parser:
 
   def __condition(self):
     self.__expression()
-    if self.__has(Token.EQ) or self.__has(Token.NOEQ) or self.__has(Token.LT) or self.__has(Token.LTE) or self.__has(Token.GT):
+    if self.__has(Token.EQ) or self.__has(Token.NOEQ) or self.__has(
+        Token.LT) or self.__has(Token.LTE) or self.__has(Token.GT):
       self.__next()
       self.__expression()
     else:
@@ -292,19 +294,40 @@ class Parser:
       self.__next()
       self.__expression()
 
-  def __print(self):
-    self.__arg_list()
-
   def __arg_list(self):
     self.__expression()
     self.__arg_list2()
-    
+
   def __arg_list2(self):
     if self.__has(Token.COMMA):
       self.__next()
       self.__expression()
       self.__arg_list2()
-      
+
+  def __ref(self):
+    self.__must_be(Token.VARIABLE)
+    self.__next()
+    if self.__has(Token.LBRACK):
+      self.__next()
+      self.__ref2()
+
+  def __ref2(self):
+    self.__arg_list()
+    self.__must_be(Token.RBRACK)
+    self.__next()
+
+  def __ref_list(self):
+    self.__ref()
+    self.__next()
+    self.__ref_list2()
+
+  def __ref_list2(self):
+    if self.__has(Token.COMMA):
+      self.__next()
+      self.__ref()
+      self.__next()
+      self.__ref_list2()
+
   def __expression(self):
     self.__term()
     self.__expression2()
@@ -350,17 +373,22 @@ class Parser:
       self.__next()
     elif self.__has(Token.VARIABLE):
       self.__next()
-      #TODO: Decide whether this is a variable by itself,
-      #or a function call.
+      if self.__has(Token.LPAREN):
+        self.__next()
+        self.__call()
     elif self.__has(Token.INTLIT):
+      self.__next()
+    elif self.__has(Token.STRING):
+      self.__next()
+    elif self.__has(Token.CHARLIT):
       self.__next()
     elif self.__must_be(Token.FLOATLIT):
       self.__next()
 
-  def __read(self):
-    self.__must_be(Token.READ)
-    self.__next()
-    self.__must_be(Token.VARIABLE)
+  def __call(self):
+    if not self.__has(Token.RPAREN):
+      self.__arg_list()
+    self.__must_be(Token.RPAREN)
     self.__next()
 
 
